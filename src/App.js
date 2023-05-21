@@ -5,6 +5,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Layout from "./layout";
 import Home from "./home";
 import PageNotFound from "./page-not-found";
+import TalkNote from "./apps/talk-note";
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
+          <Route path="/talk-note" element={<TalkNote />} />
           <Route path="*" element={<PageNotFound />} />
         </Route>
       </Routes>
