@@ -2,9 +2,9 @@ import { Outlet, Link } from "react-router-dom";
 
 const Layout = () => {
   return (
-    <>
+    <div className="container-fluid">
       <div
-        className="p-1"
+        className="row p-1"
         style={{
           "background-color": "#693d30",
         }}
@@ -19,7 +19,7 @@ const Layout = () => {
       </div>
 
       <Outlet />
-    </>
+    </div>
   );
 };
 
