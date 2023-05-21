@@ -24,6 +24,7 @@ const Home = () => {
           to={`${process.env.REACT_APP_API_ENDPOINT}/e-class/`}
           style={{ fontSize: 20 }}
           className="btn btn-primary text-decoration-none w-100"
+          target="blank"
         >
           Start
         </Link>
