@@ -1,1 +1,3 @@
-
+.app-cont:not(:last-child) {
+  margin-right: 5%;
+}
