@@ -8,6 +8,7 @@ import PageNotFound from "./page-not-found";
 import TalkNote from "./apps/talk-note";
 import GroupCall from "./apps/telegram-client/group-call/index.mjs";
 import Participant from "./apps/telegram-client/group-call/participant.mjs";
+import Feedback from "./apps/glow/feedback.mjs";
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
           />
           <Route path="*" element={<PageNotFound />} />
         </Route>
+        <Route path="/glow/feedback" element={<Feedback />} />
       </Routes>
     </BrowserRouter>
   );
