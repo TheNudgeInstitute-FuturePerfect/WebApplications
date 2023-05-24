@@ -53,7 +53,7 @@ const months = (number) => {
 
 export const duration = (startTime, endTime) => {
   let start_time, end_time;
-  if (startTime instanceof String && endTime instanceof String) {
+  if (typeof startTime === "string" && typeof endTime === "string") {
     if (new Date(startTime) !== "Invalid Date")
       start_time = new Date(startTime);
     if (new Date(endTime) !== "Invalid Date") end_time = new Date(endTime);
