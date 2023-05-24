@@ -1,1 +1,17 @@
+.user-container {
+  background-color: #9b9696;
+  border-top-left-radius: 0% !important;
+}
 
+.system-container {
+  background-color: #454545;
+  border-top-right-radius: 0% !important;
+}
+
+.tutor-feedback {
+  color: gainsboro;
+}
+
+.classification-color {
+  color: #07f33a;
+}
