@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useEffect } from "react";
 import { date } from "../../../tools.js";
 import { useRef } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 function Participant() {
   const search = useRef(null);
@@ -33,7 +33,9 @@ function Participant() {
         <div className="text-center mt-5 fw-bold heading">Loading...</div>
       ) : (
         <div className="text-center p-5">
-          <div className="fw-bold heading">
+          <div className="fw-bold heading text-start">
+            <Link to="/">Home</Link> &gt;{" "}
+            <Link to="/telegram-client/group-call">Group Calls</Link> &gt;
             Participants ({state.totalDocuments})
           </div>
           <div className="mt-5 row">

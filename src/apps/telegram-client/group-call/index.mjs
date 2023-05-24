@@ -33,8 +33,8 @@ function GroupCall() {
         <div className="text-center mt-5 fw-bold heading">Loading...</div>
       ) : (
         <div className="text-center p-5">
-          <div className="fw-bold heading">
-            Group Calls ({state.totalDocuments})
+          <div className="fw-bold heading text-start">
+            <Link to="/">Home</Link> &gt; Group Calls ({state.totalDocuments})
           </div>
           <div className="mt-5 row text-center">
             <div className="d-inline-block w-75">
