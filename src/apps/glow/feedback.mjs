@@ -38,7 +38,7 @@ function Feedback() {
       ) : state.data.length ? (
         state.data.map((session, index) => (
           <div className="row justify-content-center mt-3 mb-3" key={index}>
-            <div className="col">
+            <div className="col-md-6">
               <div className="border w-75 p-3 rounded user-container text-light mb-3">
                 {decodeURIComponent(session.Sessions.Reply)}
               </div>
