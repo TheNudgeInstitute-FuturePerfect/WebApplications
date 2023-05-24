@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useEffect } from "react";
-import { date } from "../../../tools.js";
+import { date, duration } from "../../../tools.js";
 import { useRef } from "react";
 import { Link, useParams } from "react-router-dom";
 
@@ -60,19 +60,23 @@ function Participant() {
             {state.data?.length ? (
               <div className="text-start table-text">
                 <div className="row fw-bold">
-                  <div className="p-2 border col-4">User ID</div>
-                  <div className="p-2 border col-5">Joined At</div>
-                  <div className="p-2 border col-3">Left At</div>
+                  <div className="p-2 border col-2">User ID</div>
+                  <div className="p-2 border col-4">Joined At</div>
+                  <div className="p-2 border col-4">Left At</div>
+                  <div className="p-2 border col-2">Duration</div>
                 </div>
 
                 {state.data?.map((participant, index) => (
                   <div key={index} className="row">
-                    <div className="p-2 border col-4">{participant.userId}</div>
-                    <div className="p-2 border col-5">
+                    <div className="p-2 border col-2">{participant.userId}</div>
+                    <div className="p-2 border col-4">
                       {date(participant.createdAt)}
                     </div>
-                    <div className="p-2 border col-3">
+                    <div className="p-2 border col-4">
                       {date(participant.leftAt)}
+                    </div>
+                    <div className="p-2 border col-2">
+                      {duration(participant.createdAt, participant.leftAt)}
                     </div>
                   </div>
                 ))}
