@@ -6,7 +6,7 @@ const Layout = () => {
       <div
         className="row p-1"
         style={{
-          "background-color": "#693d30",
+          backgroundColor: "#693d30",
         }}
       >
         <Link
