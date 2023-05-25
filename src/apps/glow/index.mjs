@@ -37,13 +37,13 @@ function Glow() {
       {state.loading ? (
         <div className="text-center mt-5 fw-bold heading">Loading...</div>
       ) : (
-        <div className="text-center p-5">
+        <div className="text-center p-2 p-sm-5">
           <div className="fw-bold heading text-start">
             <Link to="/">Home</Link> &gt; Glow Link Tracking (
             {state.totalDocuments})
           </div>
-          <div className="mt-5 row text-center">
-            <div className="d-inline-block w-25">
+          <div className="mt-3 row text-center">
+            <div className="mt-2 col-sm-5">
               <input
                 type="text"
                 placeholder="Enter Phone"
@@ -51,7 +51,7 @@ function Glow() {
                 ref={searchPhone}
               />
             </div>
-            <div className="d-inline-block w-25">
+            <div className="mt-2 col-sm-5">
               <input
                 type="text"
                 placeholder="Enter Session ID"
@@ -59,7 +59,7 @@ function Glow() {
                 ref={searchSession}
               />
             </div>
-            <div className="d-flex w-25">
+            <div className="mt-2 col-sm-2">
               <button
                 className="btn btn-primary button-label"
                 onClick={() =>
@@ -79,7 +79,7 @@ function Glow() {
                 <div className="row fw-bold">
                   <div className="p-2 border col">Phone</div>
                   <div className="p-2 border col">Session ID</div>
-                  <div className="p-2 border col">Link Opened At</div>
+                  <div className="p-2 border col">Time</div>
                 </div>
 
                 <div>

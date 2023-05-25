@@ -28,7 +28,7 @@ function Feedback() {
   const getSessionData = (SessionID) => {
     if (SessionID) {
       fetch(
-        `${process.env.REACT_APP_API_ENDPOINT}/api/glow/feedback?action=list&table=Sessions&condition=SessionID='${SessionID}' AND Injected is NULL`
+        `${process.env.REACT_APP_API_ENDPOINT}/api/glow/feedback?action=list&table=Sessions&condition=SessionID='${SessionID}' AND MessageType='UserMessage'`
       )
         .then((response) => {
           response.json().then((jsonResponse) => {
@@ -108,7 +108,7 @@ function Feedback() {
   };
 
   return (
-    <div className="container-fluid p-4">
+    <div className="container-fluid p-5">
       {state.loading ? (
         <div className="text-center mt-5 fw-bold">Loading...</div>
       ) : state.data.length ? (
