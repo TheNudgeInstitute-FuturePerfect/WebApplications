@@ -9,6 +9,7 @@ import TalkNote from "./apps/talk-note";
 import GroupCall from "./apps/telegram-client/group-call/index.mjs";
 import Participant from "./apps/telegram-client/group-call/participant.mjs";
 import Feedback from "./apps/glow/feedback.mjs";
+import Glow from "./apps/glow/index.mjs";
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
             path="/telegram-client/group-call/:callId"
             element={<Participant />}
           />
+          <Route path="/glow" element={<Glow />} />
           <Route path="*" element={<PageNotFound />} />
         </Route>
         <Route path="/glow/feedback" element={<Feedback />} />
