@@ -6,6 +6,7 @@ import Layout from "./layout";
 import Home from "./home";
 import PageNotFound from "./page-not-found";
 import Feedback from "./apps/glow/feedback.mjs";
+import Glow from "./apps/glow/index.mjs";
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
+          <Route path="/glow" element={<Glow />} />
           <Route path="*" element={<PageNotFound />} />
         </Route>
         <Route path="/glow/feedback" element={<Feedback />} />
