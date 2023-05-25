@@ -19,7 +19,9 @@ function Feedback() {
   const queryParams = new URLSearchParams(location.search);
   const SessionID = queryParams.get("session");
 
+  console.log("Render");
   useEffect(() => {
+    console.log("Inside use Effect");
     getSessionData(SessionID);
   }, [SessionID]);
 
@@ -30,7 +32,17 @@ function Feedback() {
       )
         .then((response) => {
           response.json().then((jsonResponse) => {
+            console.log(jsonResponse);
             setState({ ...jsonResponse, loading: false });
+            if (
+              jsonResponse &&
+              jsonResponse.data instanceof Array &&
+              jsonResponse.data.length
+            )
+              trackLink(
+                jsonResponse.data[0].Sessions.Mobile,
+                jsonResponse.data[0].Sessions.SessionID
+              );
           });
         })
         .catch((error) => {
@@ -38,6 +50,22 @@ function Feedback() {
           console.error(error);
         });
     }
+  };
+
+  const trackLink = (phone, session) => {
+    fetch(`${process.env.REACT_APP_API_ENDPOINT}/api/glow/link/tracking`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ phone: phone, session: session }),
+    })
+      .then((response) =>
+        response.json().then((jsonResponse) => console.log(jsonResponse))
+      )
+      .catch((error) => {
+        console.error(error);
+      });
   };
 
   const userFeedback = (value, index) => {
@@ -70,7 +98,7 @@ function Feedback() {
       )
         .then((response) => {
           response.json().then((jsonResponse) => {
-            // console.log("success", jsonResponse);
+            console.log(jsonResponse);
           });
         })
         .catch((error) => {
@@ -87,10 +115,7 @@ function Feedback() {
         state.data.map((session, index) => (
           <div className="row justify-content-center mt-3 mb-3" key={index}>
             <div className="col-md-6">
-              <div className="border w-75 p-3 rounded user-container text-light mb-3">
-                {decodeURIComponent(session.Sessions.Reply)}
-              </div>
-              <div className="border w-75 p-3 system-container text-light  float-end rounded">
+              <div className="border w-75 p-3 system-container text-light mb-3 float-end rounded">
                 <div
                   className={
                     session.Sessions.Classification === "Could be improved"
@@ -151,6 +176,9 @@ function Feedback() {
                 ) : (
                   <></>
                 )}
+              </div>
+              <div className="border w-75 p-3 rounded user-container text-light float-start">
+                {decodeURIComponent(session.Sessions.Reply)}
               </div>
             </div>
           </div>
