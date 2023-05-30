@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { date, duration } from "../../../tools.js";
 import { useRef } from "react";
 import axios from "axios";
+import Pagination from "../../component/pagination.js";
 
 function GroupCall() {
   const search = useRef(null);
@@ -12,16 +13,16 @@ function GroupCall() {
     getVideoChats();
   }, []);
 
-  const getVideoChats = (callId) => {
+  const getVideoChats = (callId, page) => {
     let query = "";
-    if (callId) {
-      query = `?callId=${callId}`;
-    }
+    let filters = ["limit=10"];
+    if (callId) filters.push(`callId=${callId}`);
+    if (page) filters.push(`page=${page}`);
+    if (filters.length) query = `?${filters.join("&")}`;
+
     axios
       .get(
-        process.env.REACT_APP_API_ENDPOINT +
-          "/api/telegram-client/video-chat" +
-          query
+        `${process.env.REACT_APP_API_ENDPOINT}/api/telegram-client/video-chat${query}`
       )
       .then((response) => {
         setState({ ...response.data, loading: false });
@@ -93,6 +94,12 @@ function GroupCall() {
                       </div>
                     </div>
                   ))}
+                  <Pagination
+                    currentPage={state.currentPage}
+                    totalPages={state.totalPages}
+                    totalDocuments={state.totalDocuments}
+                    paginate={(page) => getVideoChats(null, page)}
+                  />
                 </div>
               </div>
             ) : (

@@ -4,6 +4,7 @@ import { date, duration } from "../../../tools.js";
 import { useRef } from "react";
 import { Link, useParams } from "react-router-dom";
 import axios from "axios";
+import Pagination from "../../component/pagination.js";
 
 function Participant() {
   const search = useRef(null);
@@ -14,14 +15,16 @@ function Participant() {
     getParticipants();
   }, [callId]);
 
-  const getParticipants = (userId) => {
+  const getParticipants = (userId, page) => {
     let query = "";
-    if (userId) {
-      query = `&userId=${userId}`;
-    }
+    let filters = [`callId=${callId}`, "limit=1"];
+    if (userId) filters.push(`userId=${userId}`);
+    if (page) filters.push(`page=${page}`);
+    if (filters.length) query = `?${filters.join("&")}`;
+
     axios
       .get(
-        `${process.env.REACT_APP_API_ENDPOINT}/api/telegram-client/video-chat-participant?callId=${callId}${query}`
+        `${process.env.REACT_APP_API_ENDPOINT}/api/telegram-client/video-chat-participant${query}`
       )
       .then((response) => {
         setState({ ...response.data, loading: false });
@@ -92,6 +95,12 @@ function Participant() {
                     </div>
                   </div>
                 ))}
+                <Pagination
+                  currentPage={state.currentPage}
+                  totalPages={state.totalPages}
+                  totalDocuments={state.totalDocuments}
+                  paginate={(page) => getParticipants(null, page)}
+                />
               </div>
             ) : (
               <div className="fw-bold small">Not record found</div>

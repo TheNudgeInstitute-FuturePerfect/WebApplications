@@ -5,6 +5,7 @@ import { date } from "../../tools.js";
 import { useRef } from "react";
 import log from "../../log.mjs";
 import axios from "axios";
+import Pagination from "../component/pagination.js";
 
 function Glow() {
   const searchPhone = useRef(null);
@@ -17,11 +18,12 @@ function Glow() {
     getGlowLinkTracking();
   }, []);
 
-  const getGlowLinkTracking = (phone, session) => {
+  const getGlowLinkTracking = (phone, session, page) => {
     let query = "";
-    let filters = [];
+    let filters = ["limit=10"];
     if (phone) filters.push(`phone=${phone}`);
     if (session) filters.push(`session=${session}`);
+    if (page) filters.push(`page=${page}`);
     if (filters.length) query = `?${filters.join("&")}`;
 
     axios
@@ -108,6 +110,12 @@ function Glow() {
                       </div>
                     </div>
                   ))}
+                  <Pagination
+                    currentPage={state.currentPage}
+                    totalPages={state.totalPages}
+                    totalDocuments={state.totalDocuments}
+                    paginate={(page) => getGlowLinkTracking(null, null, page)}
+                  />
                 </div>
               </div>
             ) : (

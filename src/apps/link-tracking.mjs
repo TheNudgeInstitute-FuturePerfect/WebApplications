@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { date } from "../tools.js";
 import { useRef } from "react";
 import axios from "axios";
+import Pagination from "./component/pagination.js";
 
 function LinkTracking() {
   const searchName = useRef(null);
@@ -15,15 +16,17 @@ function LinkTracking() {
     getLinkTracking();
   }, []);
 
-  const getLinkTracking = (name, phone, url) => {
+  const getLinkTracking = (name, phone, url, page) => {
     let query = "";
-    let filters = [];
+    let filters = ["limit=10"];
     if (name) filters.push(`name=${name}`);
     if (phone) filters.push(`phone=${phone}`);
     if (url) filters.push(`url=${url}`);
+    if (page) filters.push(`page=${page}`);
     if (filters.length) query = `?${filters.join("&")}`;
+
     axios
-      .get(process.env.REACT_APP_API_ENDPOINT + "/api/link/list" + query)
+      .get(`${process.env.REACT_APP_API_ENDPOINT}/api/link/list${query}`)
       .then((response) => {
         setState({ ...response.data, loading: false });
       })
@@ -114,6 +117,12 @@ function LinkTracking() {
                       <div className="p-2 border col">{link.url}</div>
                     </div>
                   ))}
+                  <Pagination
+                    currentPage={state.currentPage}
+                    totalPages={state.totalPages}
+                    totalDocuments={state.totalDocuments}
+                    paginate={(page) => getLinkTracking(null, null, null, page)}
+                  />
                 </div>
               </div>
             ) : (
