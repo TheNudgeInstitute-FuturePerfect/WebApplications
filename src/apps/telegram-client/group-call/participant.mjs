@@ -17,7 +17,7 @@ function Participant() {
 
   const getParticipants = (userId, page) => {
     let query = "";
-    let filters = [`callId=${callId}`, "limit=1"];
+    let filters = [`callId=${callId}`, "limit=10"];
     if (userId) filters.push(`userId=${userId}`);
     if (page) filters.push(`page=${page}`);
     if (filters.length) query = `?${filters.join("&")}`;
