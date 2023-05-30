@@ -4,11 +4,12 @@ import { Link } from "react-router-dom";
 import { date } from "../../tools.js";
 import { useRef } from "react";
 import log from "../../log.mjs";
+import axios from "axios";
 
 function Glow() {
   const searchPhone = useRef(null);
   const searchSession = useRef(null);
-  const [state, setState] = useState({ loading: true });
+  const [state, setState] = useState({ loading: true, error: null });
 
   log("Render");
   useEffect(() => {
@@ -23,19 +24,30 @@ function Glow() {
     if (session) filters.push(`session=${session}`);
     if (filters.length) query = `?${filters.join("&")}`;
 
-    fetch(
-      process.env.REACT_APP_API_ENDPOINT + "/api/glow/link/tracking" + query
-    ).then((response) => {
-      response
-        .json()
-        .then((jsonResponse) => setState({ ...jsonResponse, loading: false }));
-    });
+    axios
+      .get(
+        `${process.env.REACT_APP_API_ENDPOINT}/api/glow/link/tracking${query}`
+      )
+      .then((response) => {
+        setState({ ...response.data, loading: false });
+      })
+      .catch(() => {
+        setState({
+          ...state,
+          loading: false,
+          error: "Internal server error",
+        });
+      });
   };
 
   return (
     <>
       {state.loading ? (
         <div className="text-center mt-5 fw-bold heading">Loading...</div>
+      ) : state.error ? (
+        <div className="text-center mt-5 text-danger heading">
+          {state.error}
+        </div>
       ) : (
         <div className="text-center p-2 p-sm-5">
           <div className="fw-bold heading text-start">

@@ -12,9 +12,10 @@ import {
   faThumbsDown as faThumbsDownSolid,
   faThumbsUp as faThumbsUpSolid,
 } from "@fortawesome/free-solid-svg-icons";
+import axios from "axios";
 
 function Feedback() {
-  const [state, setState] = useState({ loading: true });
+  const [state, setState] = useState({ loading: true, error: null });
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const SessionID = queryParams.get("session");
@@ -27,27 +28,24 @@ function Feedback() {
 
   const getSessionData = (SessionID) => {
     if (SessionID) {
-      fetch(
-        `${process.env.REACT_APP_API_ENDPOINT}/api/glow/feedback?action=list&table=Sessions&condition=SessionID='${SessionID}' AND MessageType='UserMessage'`
-      )
+      axios
+        .get(
+          `${process.env.REACT_APP_API_ENDPOINT}/api/glow/feedback?action=list&table=Sessions&condition=SessionID='${SessionID}' AND MessageType='UserMessage'`
+        )
         .then((response) => {
-          response.json().then((jsonResponse) => {
-            console.log(jsonResponse);
-            setState({ ...jsonResponse, loading: false });
-            if (
-              jsonResponse &&
-              jsonResponse.data instanceof Array &&
-              jsonResponse.data.length
-            )
-              trackLink(
-                jsonResponse.data[0].Sessions.Mobile,
-                jsonResponse.data[0].Sessions.SessionID
-              );
-          });
+          setState({ ...response.data, loading: false });
+          if (response.data.data instanceof Array && response.data.data.length)
+            trackLink(
+              response.data.data[0].Sessions.Mobile,
+              response.data.data[0].Sessions.SessionID
+            );
         })
-        .catch((error) => {
-          setState({ ...state, loading: false });
-          console.error(error);
+        .catch(() => {
+          setState({
+            ...state,
+            loading: false,
+            error: "Internal server error",
+          });
         });
     }
   };
@@ -108,13 +106,17 @@ function Feedback() {
   };
 
   return (
-    <div className="container-fluid p-5">
+    <div className="container-fluid p-2">
       {state.loading ? (
         <div className="text-center mt-5 fw-bold">Loading...</div>
-      ) : state.data.length ? (
-        state.data.map((session, index) => (
+      ) : state.error ? (
+        <div className="text-center mt-5 text-danger heading">
+          {state.error}
+        </div>
+      ) : state.data?.length ? (
+        state.data?.map((session, index) => (
           <div className="row justify-content-center mt-3 mb-3" key={index}>
-            <div className="col-md-6">
+            <div className="col-md-9">
               <div className="border w-75 p-3 system-container text-light mb-3 float-end rounded">
                 <div
                   className={
@@ -184,19 +186,7 @@ function Feedback() {
           </div>
         ))
       ) : (
-        <div className="text-center mt-5">
-          <div className="text-danger">Something went wrong</div>
-          <div className="mt-4">
-            <a
-              href=""
-              onClick={location.reload}
-              className="btn btn-primary text-decoration-none"
-              style={{ cursor: "pointer" }}
-            >
-              Retry
-            </a>
-          </div>
-        </div>
+        <div className="text-center mt-5 fw-bold small">No data found</div>
       )}
     </div>
   );
