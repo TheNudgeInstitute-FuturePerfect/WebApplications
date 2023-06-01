@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { useLocation } from "react-router";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -13,100 +13,27 @@ import {
   faThumbsUp as faThumbsUpSolid,
 } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
+import { getSessionData, userFeedback } from "./api.mjs";
 
-function Feedback() {
-  const [state, setState] = useState({ loading: true, error: null });
+function Feedback({ params }) {
+  const [state, setState] = useState({
+    data: params?.data || [],
+    loading: params?.loading === false ? false : true,
+    error: params?.error || null,
+  });
+
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const SessionID = queryParams.get("session");
 
-  console.log("Render");
   useEffect(() => {
-    console.log("Inside use Effect");
-    getSessionData(SessionID);
+    if (state.data.length === 0) {
+      getSessionData(SessionID).then((data) => setState({ ...data }));
+    }
   }, [SessionID]);
 
-  const getSessionData = (SessionID) => {
-    if (SessionID) {
-      axios
-        .get(
-          `${process.env.REACT_APP_API_ENDPOINT}/api/glow/feedback?action=list&table=Sessions&condition=SessionID='${SessionID}' AND MessageType='UserMessage'`
-        )
-        .then((response) => {
-          setState({ ...response.data, loading: false });
-          if (response.data.data instanceof Array && response.data.data.length)
-            trackLink(
-              response.data.data[0].Sessions.Mobile,
-              response.data.data[0].Sessions.SessionID
-            );
-        })
-        .catch(() => {
-          setState({
-            ...state,
-            loading: false,
-            error: "Internal server error",
-          });
-        });
-    }
-  };
-
-  const trackLink = (phone, session) => {
-    fetch(`${process.env.REACT_APP_API_ENDPOINT}/api/glow/link/tracking`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ phone: phone, session: session }),
-    })
-      .then((response) =>
-        response.json().then((jsonResponse) => console.log(jsonResponse))
-      )
-      .catch((error) => {
-        console.error(error);
-      });
-  };
-
-  const userFeedback = (value, index) => {
-    if (state.data instanceof Array) {
-      const data = state.data.map((element, _index) => {
-        if (index === _index) {
-          return { Sessions: { ...element.Sessions, UserFeedback: value } };
-        }
-        return element;
-      });
-      setState({ data });
-      // update database
-      const requestBody = {
-        table: "Sessions",
-        set: {
-          UserFeedback: value,
-        },
-        condition: `ROWID=${state.data[index].Sessions.ROWID}`,
-      };
-      const options = {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(requestBody),
-      };
-      fetch(
-        `${process.env.REACT_APP_API_ENDPOINT}/api/glow/feedback?action=update`,
-        options
-      )
-        .then((response) => {
-          response.json().then((jsonResponse) => {
-            console.log(jsonResponse);
-          });
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-    }
-  };
-
   return (
-    <div className="container-fluid p-2">
+    <div className="d-flex justify-content-center m-3">
       {state.loading ? (
         <div className="text-center mt-5 fw-bold">Loading...</div>
       ) : state.error ? (
@@ -114,10 +41,10 @@ function Feedback() {
           {state.error}
         </div>
       ) : state.data?.length ? (
-        state.data?.map((session, index) => (
-          <div className="row justify-content-center mt-3 mb-3" key={index}>
-            <div className="col-md-9">
-              <div className="border w-75 p-3 system-container text-light mb-3 float-end rounded">
+        <div className="d-flex flex-column" style={{ maxWidth: 500 }}>
+          {state.data?.map((session, index) => (
+            <Fragment key={index}>
+              <div className="border p-2 system-container text-light rounded mb-3 align-self-end ms-5">
                 <div
                   className={
                     session.Sessions.Classification === "Could be improved"
@@ -125,7 +52,7 @@ function Feedback() {
                       : "mb-1 classification-color"
                   }
                 >
-                  <span>
+                  <span className="me-3">
                     {session.Sessions.Classification?.toLowerCase() ===
                     "could be improved" ? (
                       <>
@@ -145,21 +72,31 @@ function Feedback() {
                   <span className="float-end">
                     <FontAwesomeIcon
                       icon={
-                        session.Sessions.UserFeedback?.toLowerCase() === "up"
+                        session.Sessions.UserFeedback?.toLowerCase() === "good"
                           ? faThumbsUpSolid
                           : faThumbsUpRegular
                       }
                       className="text-secondary me-2"
-                      onClick={() => userFeedback("Up", index)}
+                      onClick={() =>
+                        setState({
+                          ...state,
+                          data: userFeedback(state.data, "Good", index),
+                        })
+                      }
                     />
                     <FontAwesomeIcon
                       icon={
-                        session.Sessions.UserFeedback?.toLowerCase() === "down"
+                        session.Sessions.UserFeedback?.toLowerCase() === "bad"
                           ? faThumbsDownSolid
                           : faThumbsDownRegular
                       }
                       className="text-secondary"
-                      onClick={() => userFeedback("Down", index)}
+                      onClick={() =>
+                        setState({
+                          ...state,
+                          data: userFeedback(state.data, "Bad", index),
+                        })
+                      }
                     />
                   </span>
                 </div>
@@ -179,12 +116,13 @@ function Feedback() {
                   <></>
                 )}
               </div>
-              <div className="border w-75 p-3 rounded user-container text-light float-start">
+
+              <div className="border p-2 rounded user-container text-light mb-3 align-self-start me-5">
                 {decodeURIComponent(session.Sessions.Reply)}
               </div>
-            </div>
-          </div>
-        ))
+            </Fragment>
+          ))}
+        </div>
       ) : (
         <div className="text-center mt-5 fw-bold small">No data found</div>
       )}

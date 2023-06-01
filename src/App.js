@@ -11,6 +11,7 @@ import Participant from "./apps/telegram-client/group-call/participant.mjs";
 import Feedback from "./apps/glow/feedback.mjs";
 import Glow from "./apps/glow/index.mjs";
 import LinkTracking from "./apps/link-tracking.mjs";
+import Report from "./apps/glow/report.mjs";
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
           <Route path="*" element={<PageNotFound />} />
         </Route>
         <Route path="/glow/feedback" element={<Feedback />} />
+        <Route path="/glow/report" element={<Report />} />
       </Routes>
     </BrowserRouter>
   );

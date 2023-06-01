@@ -18,3 +18,15 @@
 .classification-color {
   color: #07f33a;
 }
+
+.text-nudge {
+  color: #693d30;
+}
+
+.bg-nudge {
+  background-color: #693d30;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
