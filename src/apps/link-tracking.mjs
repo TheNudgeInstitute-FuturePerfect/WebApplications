@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { date } from "../tools.js";
@@ -10,13 +10,11 @@ function LinkTracking() {
   const searchName = useRef(null);
   const searchPhone = useRef(null);
   const searchURL = useRef(null);
-  const [state, setState] = useState({ loading: true, error: null });
+  const [state, setState] = useState({});
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  useEffect(() => {
-    getLinkTracking();
-  }, []);
-
-  const getLinkTracking = (name, phone, url, page) => {
+  const getLinkTracking = useCallback((name, phone, url, page) => {
     let query = "";
     let filters = ["limit=10"];
     if (name) filters.push(`name=${name}`);
@@ -28,25 +26,25 @@ function LinkTracking() {
     axios
       .get(`${process.env.REACT_APP_API_ENDPOINT}/api/link/list${query}`)
       .then((response) => {
-        setState({ ...response.data, loading: false });
+        setState({ ...response.data });
+        setLoading(false);
       })
       .catch(() => {
-        setState({
-          ...state,
-          loading: false,
-          error: "Internal server error",
-        });
+        setLoading(false);
+        setError("Internal server error");
       });
-  };
+  }, []);
+
+  useEffect(() => {
+    getLinkTracking();
+  }, [getLinkTracking]);
 
   return (
     <>
-      {state.loading ? (
+      {loading ? (
         <div className="text-center mt-5 fw-bold heading">Loading...</div>
-      ) : state.error ? (
-        <div className="text-center mt-5 text-danger heading">
-          {state.error}
-        </div>
+      ) : error ? (
+        <div className="text-center mt-5 text-danger heading">{error}</div>
       ) : (
         <div className="text-center p-5">
           <div className="fw-bold heading text-start">

@@ -15,12 +15,10 @@ import { getSessionData } from "./api.mjs";
 import { useLocation } from "react-router-dom";
 
 function Report() {
-  const [state, setState] = useState({
-    objective: "hide",
-    feedback: "show",
-    stars: 0,
-    loading: true,
-  });
+  const [state, setState] = useState({ stars: 0, loading: true });
+  const [showObjective, setShowObjective] = useState(false);
+  const [showFeedback] = useState(true);
+
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const SessionID = queryParams.get("session");
@@ -28,7 +26,6 @@ function Report() {
   useEffect(() => {
     getSessionData(SessionID).then((response) => {
       setState({
-        ...state,
         ...response,
         stars: stars(response.data),
         wordCount: wordCount(response.data),
@@ -104,12 +101,7 @@ function Report() {
             <div
               className="d-none text-nudge border rounded p-2 cursor-pointer"
               style={{ borderColor: "#693d30", backgroundColor: "#f9f9f9" }}
-              onClick={() =>
-                setState({
-                  ...state,
-                  objective: state.objective === "show" ? "hide" : "show",
-                })
-              }
+              onClick={() => setShowObjective(showObjective ? false : true)}
             >
               <div className="d-flex justify-content-between fw-bold">
                 <div className="w-auto">Tasks Completed</div>
@@ -123,9 +115,7 @@ function Report() {
               <div
                 className="mt-1"
                 style={
-                  state.objective == "show"
-                    ? { display: "block" }
-                    : { display: "none" }
+                  showObjective ? { display: "block" } : { display: "none" }
                 }
               >
                 <div className="mt-2">
@@ -149,12 +139,7 @@ function Report() {
             >
               <div
                 className="w-auto fw-bold d-flex justify-content-between"
-                // onClick={() =>
-                //   setState({
-                //     ...state,
-                //     feedback: state.feedback == "show" ? "hide" : "show",
-                //   })
-                // }
+                // onClick={() => setShowFeedback(showFeedback ? false : true)}
               >
                 <div>Sentence-by-sentence Feedback</div>
                 {/* <div className="d-flex">
@@ -169,7 +154,7 @@ function Report() {
                 style={{
                   maxHeight: 200,
                   overflowY: "scroll",
-                  display: state.feedback === "show" ? "block" : "none",
+                  display: showFeedback ? "block" : "none",
                 }}
               >
                 <Feedback

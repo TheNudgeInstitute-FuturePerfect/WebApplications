@@ -1,8 +1,8 @@
 function Pagination({ currentPage, totalPages, totalDocuments, paginate }) {
   return (
-    <div className="mt-2 text-center">
+    <div className="mt-1 text-center">
       <div
-        className={`d-inline-block border p-2 me-1${
+        className={`d-inline-block border p-2 me-1 mt-1 cursor-pointer${
           currentPage === 1 ? " text-secondary" : " text-primary"
         }`}
         onClick={() => (currentPage === 1 ? null : paginate(1))}
@@ -10,29 +10,32 @@ function Pagination({ currentPage, totalPages, totalDocuments, paginate }) {
         First
       </div>
       <div
-        className={`d-inline-block border p-2 me-1${
+        className={`d-inline-block border p-2 me-1 mt-1 cursor-pointer${
           currentPage === 1 ? " text-secondary" : " text-primary"
         }`}
         onClick={() => (currentPage === 1 ? null : paginate(currentPage - 1))}
       >
         Previous
       </div>
-      {Array.from(Array(totalPages || currentPage).keys()).map((element) => (
-        <div
-          className={`d-inline-block border p-2 me-1${
-            currentPage === element + 1
-              ? " bg-primary text-light"
-              : " text-primary"
-          }`}
-          onClick={() =>
-            currentPage === element + 1 ? null : paginate(element + 1)
-          }
-        >
-          {element + 1}
-        </div>
-      ))}
+      {Array.from(Array(totalPages || currentPage).keys()).map(
+        (element, index) => (
+          <div
+            key={index}
+            className={`d-inline-block border p-2 me-1 mt-1 cursor-pointer${
+              currentPage === element + 1
+                ? " bg-primary text-light"
+                : " text-primary"
+            }`}
+            onClick={() =>
+              currentPage === element + 1 ? null : paginate(element + 1)
+            }
+          >
+            {element + 1}
+          </div>
+        )
+      )}
       <div
-        className={`d-inline-block border p-2 me-1${
+        className={`d-inline-block border p-2 me-1 mt-1 cursor-pointer${
           currentPage === totalPages ? " text-secondary" : " text-primary"
         }`}
         onClick={() =>
@@ -42,7 +45,7 @@ function Pagination({ currentPage, totalPages, totalDocuments, paginate }) {
         Next
       </div>
       <div
-        className={`d-inline-block border p-2 me-1${
+        className={`d-inline-block border p-2 me-1 mt-1 cursor-pointer${
           currentPage === totalPages ? " text-secondary" : " text-primary"
         }`}
         onClick={() =>

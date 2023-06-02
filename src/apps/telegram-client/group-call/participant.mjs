@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { useEffect } from "react";
 import { date, duration } from "../../../tools.js";
 import { useRef } from "react";
@@ -8,44 +8,45 @@ import Pagination from "../../component/pagination.js";
 
 function Participant() {
   const search = useRef(null);
-  const [state, setState] = useState({ loading: true, error: null });
+  const [state, setState] = useState({});
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const { callId } = useParams();
+
+  const getParticipants = useCallback(
+    (userId, page) => {
+      let query = "";
+      let filters = [`callId=${callId}`, "limit=10"];
+      if (userId) filters.push(`userId=${userId}`);
+      if (page) filters.push(`page=${page}`);
+      if (filters.length) query = `?${filters.join("&")}`;
+
+      axios
+        .get(
+          `${process.env.REACT_APP_API_ENDPOINT}/api/telegram-client/video-chat-participant${query}`
+        )
+        .then((response) => {
+          setState({ ...response.data });
+          setLoading(false);
+        })
+        .catch(() => {
+          setLoading(false);
+          setError("Internal server error");
+        });
+    },
+    [callId]
+  );
 
   useEffect(() => {
     getParticipants();
-  }, [callId]);
-
-  const getParticipants = (userId, page) => {
-    let query = "";
-    let filters = [`callId=${callId}`, "limit=10"];
-    if (userId) filters.push(`userId=${userId}`);
-    if (page) filters.push(`page=${page}`);
-    if (filters.length) query = `?${filters.join("&")}`;
-
-    axios
-      .get(
-        `${process.env.REACT_APP_API_ENDPOINT}/api/telegram-client/video-chat-participant${query}`
-      )
-      .then((response) => {
-        setState({ ...response.data, loading: false });
-      })
-      .catch(() => {
-        setState({
-          ...state,
-          loading: false,
-          error: "Internal server error",
-        });
-      });
-  };
+  }, [callId, getParticipants]);
 
   return (
     <>
-      {state.loading ? (
+      {loading ? (
         <div className="text-center mt-5 fw-bold heading">Loading...</div>
-      ) : state.error ? (
-        <div className="text-center mt-5 text-danger heading">
-          {state.error}
-        </div>
+      ) : error ? (
+        <div className="text-center mt-5 text-danger heading">{error}</div>
       ) : (
         <div className="text-center p-5">
           <div className="fw-bold heading text-start">

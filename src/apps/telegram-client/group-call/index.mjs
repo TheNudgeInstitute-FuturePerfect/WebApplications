@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { date, duration } from "../../../tools.js";
@@ -8,12 +8,11 @@ import Pagination from "../../component/pagination.js";
 
 function GroupCall() {
   const search = useRef(null);
-  const [state, setState] = useState({ loading: true, error: null });
-  useEffect(() => {
-    getVideoChats();
-  }, []);
+  const [state, setState] = useState({});
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const getVideoChats = (callId, page) => {
+  const getVideoChats = useCallback((callId, page) => {
     let query = "";
     let filters = ["limit=10"];
     if (callId) filters.push(`callId=${callId}`);
@@ -25,25 +24,25 @@ function GroupCall() {
         `${process.env.REACT_APP_API_ENDPOINT}/api/telegram-client/video-chat${query}`
       )
       .then((response) => {
-        setState({ ...response.data, loading: false });
+        setState({ ...response.data });
+        setLoading(false);
       })
       .catch(() => {
-        setState({
-          ...state,
-          loading: false,
-          error: "Internal server error",
-        });
+        setLoading(false);
+        setError("Internal server error");
       });
-  };
+  }, []);
+
+  useEffect(() => {
+    getVideoChats();
+  }, [getVideoChats]);
 
   return (
     <>
-      {state.loading ? (
+      {loading ? (
         <div className="text-center mt-5 fw-bold heading">Loading...</div>
-      ) : state.error ? (
-        <div className="text-center mt-5 text-danger heading">
-          {state.error}
-        </div>
+      ) : error ? (
+        <div className="text-center mt-5 text-danger heading">{error}</div>
       ) : (
         <div className="text-center p-5">
           <div className="fw-bold heading text-start">

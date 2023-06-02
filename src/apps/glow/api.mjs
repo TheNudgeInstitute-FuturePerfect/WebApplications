@@ -29,9 +29,7 @@ const trackLink = (phone, session) => {
     },
     body: JSON.stringify({ phone: phone, session: session }),
   })
-    .then((response) =>
-      response.json().then((jsonResponse) => console.log(jsonResponse))
-    )
+    .then((response) => response.json().then((jsonResponse) => null))
     .catch((error) => {
       console.error(error);
     });
@@ -53,7 +51,7 @@ const userFeedback = (data, value, index) => {
       },
       condition: `ROWID=${data[index].Sessions.ROWID}`,
     };
-    console.log(requestBody);
+
     const options = {
       method: "POST",
       headers: {
@@ -61,19 +59,19 @@ const userFeedback = (data, value, index) => {
       },
       body: JSON.stringify(requestBody),
     };
+
     fetch(
       `${process.env.REACT_APP_API_ENDPOINT}/api/glow/feedback?action=update`,
       options
     )
       .then((response) => {
         response.json().then((jsonResponse) => {
-          console.log(jsonResponse);
+          // console.log(jsonResponse);
         });
       })
       .catch((error) => {
         console.error(error);
       });
-    console.log(_data);
     return _data;
   }
 };
