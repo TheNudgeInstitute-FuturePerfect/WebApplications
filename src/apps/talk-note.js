@@ -40,10 +40,8 @@ export default class TalkNote extends Component {
           data: this.beautify(res.data.data),
           error: null,
         });
-        console.log(res);
       })
       .catch((error) => {
-        console.log(error);
         if (error.response?.status === 500)
           this.setState({
             ...this.state,
