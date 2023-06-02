@@ -29,7 +29,7 @@ function Feedback({ params }) {
     if (state.data.length === 0) {
       getSessionData(SessionID).then((data) => setState({ ...data }));
     }
-  }, [SessionID]);
+  }, [SessionID, state.data.length]);
 
   return (
     <div className="d-flex justify-content-center m-3">
