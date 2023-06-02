@@ -12,7 +12,6 @@ import {
   faThumbsDown as faThumbsDownSolid,
   faThumbsUp as faThumbsUpSolid,
 } from "@fortawesome/free-solid-svg-icons";
-import axios from "axios";
 import { getSessionData, userFeedback } from "./api.mjs";
 
 function Feedback({ params }) {
@@ -47,7 +46,8 @@ function Feedback({ params }) {
               <div className="border p-2 system-container text-light rounded mb-3 align-self-end ms-5">
                 <div
                   className={
-                    session.Sessions.Classification === "Could be improved"
+                    session.Sessions.Classification?.toLowerCase() ===
+                    "could be improved"
                       ? "mb-1 text-warning"
                       : "mb-1 classification-color"
                   }
@@ -57,7 +57,7 @@ function Feedback({ params }) {
                     "could be improved" ? (
                       <>
                         <FontAwesomeIcon icon={faCheck} className="me-1" />
-                        Could be improved
+                        Could be Improved
                       </>
                     ) : (
                       <>
@@ -65,7 +65,7 @@ function Feedback({ params }) {
                           icon={faCheckDouble}
                           className="me-1"
                         />
-                        Perfect line
+                        Perfect Line
                       </>
                     )}
                   </span>

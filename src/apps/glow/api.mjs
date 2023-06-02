@@ -4,7 +4,7 @@ const getSessionData = async (SessionID) => {
   if (SessionID) {
     try {
       const response = await axios.get(
-        `${process.env.REACT_APP_API_ENDPOINT}/api/glow/feedback?action=list&table=Sessions&condition=SessionID='${SessionID}' AND MessageType='UserMessage'`
+        `${process.env.REACT_APP_API_ENDPOINT}/api/glow/feedback?action=list&table=Sessions&condition=SessionID='${SessionID}' AND MessageType='UserMessage' ORDER BY CREATEDTIME`
       );
       if (response.data.data instanceof Array && response.data.data.length)
         trackLink(
