@@ -148,23 +148,33 @@ function Report() {
                   </div>
                 </div> */}
               </div>
-
-              <div
-                className="border rounded m-2"
-                style={{
-                  maxHeight: 200,
-                  overflowY: "scroll",
-                  display: showFeedback ? "block" : "none",
-                }}
-              >
-                <Feedback
-                  params={{
-                    data: state.data,
-                    loading: state.loading,
-                    error: state.error,
+              <div className="position-relative p-2">
+                <div
+                  className="border rounded"
+                  style={{
+                    maxHeight: 200,
+                    overflowY: "scroll",
+                    display: showFeedback ? "block" : "none",
                   }}
-                />
-                <div className="d-none justify-content-center mb-2">
+                >
+                  <Feedback
+                    params={{
+                      data: state.data,
+                      loading: state.loading,
+                      error: state.error,
+                    }}
+                  />
+                </div>
+                <div
+                  className="d-flex justify-content-center pt-5 pb-3 border-right rounded position-absolute"
+                  style={{
+                    width: "97%",
+                    opacity: 0.7,
+                    bottom: 0,
+                    backgroundImage:
+                      "linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1))",
+                  }}
+                >
                   <FontAwesomeIcon icon={faAngleDoubleDown} />
                 </div>
               </div>
