@@ -6,13 +6,17 @@ import { useRef } from "react";
 import axios from "axios";
 import Pagination from "../component/pagination.js";
 import { useCallback } from "react";
+import Download from "../component/download.js";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faDownload } from "@fortawesome/free-solid-svg-icons";
 
 function Glow() {
   const searchPhone = useRef(null);
   const searchSession = useRef(null);
-  const [state, setState] = useState({ loading: true, error: null });
+  const [state, setState] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [showModal, setShowModal] = useState(false);
 
   const getGlowLinkTracking = useCallback((phone, session, page) => {
     let query = "";
@@ -53,6 +57,11 @@ function Glow() {
             {state.totalDocuments})
           </div>
           <div className="mt-3 row text-center">
+            <Download
+              showModal={showModal}
+              hideModal={() => setShowModal(false)}
+              path="glow/link/tracking"
+            />
             <div className="mt-2 col-sm-5">
               <input
                 type="text"
@@ -69,9 +78,9 @@ function Glow() {
                 ref={searchSession}
               />
             </div>
-            <div className="mt-2 col-sm-2">
+            <div className="mt-2 col-sm-2 d-flex">
               <button
-                className="btn btn-primary button-label"
+                className="btn btn-primary button-label me-3 d-flex align-self-center"
                 onClick={() =>
                   getGlowLinkTracking(
                     searchPhone.current?.value,
@@ -81,6 +90,14 @@ function Glow() {
               >
                 Search
               </button>
+
+              <FontAwesomeIcon
+                icon={faDownload}
+                className="text-secondary d-flex align-self-center cursor-pointer"
+                style={{ fontSize: "1.5rem" }}
+                title="Download"
+                onClick={() => setShowModal(true)}
+              />
             </div>
           </div>
           <div className="mt-5">

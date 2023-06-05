@@ -5,12 +5,16 @@ import { date, duration } from "../../../tools.js";
 import { useRef } from "react";
 import axios from "axios";
 import Pagination from "../../component/pagination.js";
+import Download from "../../component/download.js";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faDownload } from "@fortawesome/free-solid-svg-icons";
 
 function GroupCall() {
   const search = useRef(null);
   const [state, setState] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [showModal, setShowModal] = useState(false);
 
   const getVideoChats = useCallback((callId, page) => {
     let query = "";
@@ -49,6 +53,11 @@ function GroupCall() {
             <Link to="/">Home</Link> &gt; Group Calls ({state.totalDocuments})
           </div>
           <div className="mt-5 row text-center">
+            <Download
+              showModal={showModal}
+              hideModal={() => setShowModal(false)}
+              path="telegram-client/video-chat"
+            />
             <div className="d-inline-block w-75">
               <input
                 type="text"
@@ -59,11 +68,18 @@ function GroupCall() {
             </div>
             <div className="d-flex w-25">
               <button
-                className="btn btn-primary button-label"
+                className="btn btn-primary button-label d-flex align-self-center me-2"
                 onClick={() => getVideoChats(search.current?.value)}
               >
                 Search
               </button>
+              <FontAwesomeIcon
+                icon={faDownload}
+                className="text-secondary d-flex align-self-center cursor-pointer"
+                style={{ fontSize: "1.5rem" }}
+                title="Download"
+                onClick={() => setShowModal(true)}
+              />
             </div>
           </div>
           <div className="mt-5">

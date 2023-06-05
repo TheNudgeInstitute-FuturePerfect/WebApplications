@@ -5,6 +5,9 @@ import { date } from "../tools.js";
 import { useRef } from "react";
 import axios from "axios";
 import Pagination from "./component/pagination.js";
+import Download from "./component/download.js";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faDownload } from "@fortawesome/free-solid-svg-icons";
 
 function LinkTracking() {
   const searchName = useRef(null);
@@ -13,6 +16,7 @@ function LinkTracking() {
   const [state, setState] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [showModal, setShowModal] = useState(false);
 
   const getLinkTracking = useCallback((name, phone, url, page) => {
     let query = "";
@@ -51,6 +55,11 @@ function LinkTracking() {
             <Link to="/">Home</Link> &gt; Links ({state.totalDocuments})
           </div>
           <div className="mt-3 row text-center">
+            <Download
+              showModal={showModal}
+              hideModal={() => setShowModal(false)}
+              path="link/list"
+            />
             <div className="d-inline-block col-12 col-sm-3 mt-2">
               <input
                 type="text"
@@ -77,7 +86,7 @@ function LinkTracking() {
             </div>
             <div className="d-flex col-12 col-sm-3 mt-2">
               <button
-                className="btn btn-primary button-label"
+                className="btn btn-primary button-label d-flex align-self-center me-2"
                 onClick={() =>
                   getLinkTracking(
                     searchName.current?.value,
@@ -88,6 +97,13 @@ function LinkTracking() {
               >
                 Search
               </button>
+              <FontAwesomeIcon
+                icon={faDownload}
+                className="text-secondary d-flex align-self-center cursor-pointer"
+                style={{ fontSize: "1.5rem" }}
+                title="Download"
+                onClick={() => setShowModal(true)}
+              />
             </div>
           </div>
           <div className="mt-5">
