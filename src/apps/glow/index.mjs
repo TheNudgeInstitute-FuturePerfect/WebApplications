@@ -104,6 +104,7 @@ function Glow() {
             {state.data?.length ? (
               <div className="text-start table-text">
                 <div className="row fw-bold">
+                  <div className="p-2 border col">ID</div>
                   <div className="p-2 border col">Phone</div>
                   <div className="p-2 border col">Session ID</div>
                   <div className="p-2 border col">Time</div>
@@ -113,6 +114,9 @@ function Glow() {
                 <div>
                   {state.data?.map((glowLinkTracking, index) => (
                     <div key={index} className="row">
+                      <div className="p-2 border col">
+                        {glowLinkTracking._id}
+                      </div>
                       <div className="p-2 border col">
                         {glowLinkTracking.phone}
                       </div>
