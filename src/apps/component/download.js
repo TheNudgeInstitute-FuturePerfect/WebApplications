@@ -56,12 +56,13 @@ function Download({ showModal, hideModal, path }) {
       case "glow/link/tracking":
         generateExcelSheet(
           data,
-          ["ID", "Phone", "Session ID", "Date Time"],
+          ["ID", "Phone", "Session ID", "Date Time", "Activity"],
           [
             { key: "_id" },
             { key: "phone" },
             { key: "session" },
             { key: "createdAt", type: "date" },
+            { key: "activity" },
           ],
           "Glow Link Trackings.xlsx"
         );
