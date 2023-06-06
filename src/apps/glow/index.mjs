@@ -107,6 +107,7 @@ function Glow() {
                   <div className="p-2 border col">Phone</div>
                   <div className="p-2 border col">Session ID</div>
                   <div className="p-2 border col">Time</div>
+                  <div className="p-2 border col">Activity</div>
                 </div>
 
                 <div>
@@ -120,6 +121,9 @@ function Glow() {
                       </div>
                       <div className="p-2 border col">
                         {date(glowLinkTracking.createdAt)}
+                      </div>
+                      <div className="p-2 border col">
+                        {glowLinkTracking.activity}
                       </div>
                     </div>
                   ))}

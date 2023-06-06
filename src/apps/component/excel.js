@@ -15,9 +15,8 @@ export const generateExcelSheet = (apiResponse, headers, fields, filename) => {
         if (field.function === "duration") {
           return duration(...field.arguments.map((argument) => item[argument]));
         }
-      } else {
-        return field.type === "date" ? date(item[field.key]) : item[field.key];
       }
+      return field.type === "date" ? date(item[field.key]) : item[field.key];
     });
     sheetData.push(rowData);
   });

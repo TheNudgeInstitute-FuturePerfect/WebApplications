@@ -26,10 +26,10 @@ function Feedback({ params }) {
   const SessionID = queryParams.get("session");
 
   useEffect(() => {
-    if (state.data.length === 0) {
+    if (state?.data?.length === 0) {
       getSessionData(SessionID).then((data) => setState({ ...data }));
     }
-  }, [SessionID, state.data.length]);
+  }, [SessionID, state?.data?.length]);
 
   return (
     <div className="d-flex justify-content-center m-3">

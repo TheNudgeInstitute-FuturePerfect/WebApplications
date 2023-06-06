@@ -4,12 +4,13 @@ const getSessionData = async (SessionID) => {
   if (SessionID) {
     try {
       const response = await axios.get(
-        `${process.env.REACT_APP_API_ENDPOINT}/api/glow/feedback?action=list&table=Sessions&condition=SessionID='${SessionID}' AND MessageType='UserMessage' ORDER BY CREATEDTIME`
+        `${process.env.REACT_APP_API_ENDPOINT}/api/glow/feedback?action=list&table=Sessions&condition=SessionID='${SessionID}' AND MessageType='UserMessage' ORDER BY ROWID`
       );
       if (response.data.data instanceof Array && response.data.data.length)
         trackLink(
           response.data.data[0].Sessions.Mobile,
-          response.data.data[0].Sessions.SessionID
+          response.data.data[0].Sessions.SessionID,
+          "Page Opened"
         );
       return { ...response.data, loading: false };
     } catch (error) {
@@ -21,13 +22,34 @@ const getSessionData = async (SessionID) => {
   }
 };
 
-const trackLink = (phone, session) => {
+const getSystemPrompts = async (ROWID) => {
+  if (ROWID) {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API_ENDPOINT}/api/glow/feedback?action=list&table=SystemPrompts&condition=ROWID='${ROWID}'`
+      );
+      if (response.data.data instanceof Array && response.data.data.length)
+        return { ...response.data, loading: false };
+    } catch (error) {
+      return {
+        loading: false,
+        error: "Internal server error",
+      };
+    }
+  }
+};
+
+const trackLink = (phone, session, activity) => {
   fetch(`${process.env.REACT_APP_API_ENDPOINT}/api/glow/link/tracking`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ phone: phone, session: session }),
+    body: JSON.stringify({
+      phone: phone,
+      session: session,
+      activity: activity,
+    }),
   })
     .then((response) => response.json().then((jsonResponse) => null))
     .catch((error) => {
@@ -76,4 +98,4 @@ const userFeedback = (data, value, index) => {
   }
 };
 
-export { getSessionData, userFeedback };
+export { getSessionData, userFeedback, trackLink, getSystemPrompts };

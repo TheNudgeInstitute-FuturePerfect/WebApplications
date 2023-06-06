@@ -5,31 +5,38 @@ import {
 } from "@fortawesome/free-regular-svg-icons";
 import {
   faAngleDoubleDown,
+  faAngleDoubleUp,
   faAngleDown,
   faStar as faStarSolid,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Feedback from "./feedback.mjs";
 import { useEffect, useState } from "react";
-import { getSessionData } from "./api.mjs";
+import { getSessionData, getSystemPrompts, trackLink } from "./api.mjs";
 import { useLocation } from "react-router-dom";
 
 function Report() {
   const [state, setState] = useState({ stars: 0, loading: true });
   const [showObjective, setShowObjective] = useState(false);
   const [showFeedback] = useState(true);
+  const [expanded, setExpanded] = useState(false);
 
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const SessionID = queryParams.get("session");
 
   useEffect(() => {
-    getSessionData(SessionID).then((response) => {
-      setState({
-        ...response,
-        stars: stars(response.data),
-        wordCount: wordCount(response.data),
-      });
+    getSessionData(SessionID).then((SessionData) => {
+      getSystemPrompts(SessionData.data[0].Sessions.SystemPromptsROWID).then(
+        (SystemPrompt) => {
+          setState({
+            ...SessionData,
+            stars: stars(SessionData.data),
+            wordCount: wordCount(SessionData.data),
+            ...SystemPrompt.data[0],
+          });
+        }
+      );
     });
   }, [SessionID]);
 
@@ -60,6 +67,18 @@ function Report() {
     if (percentage >= 70) return 3;
   };
 
+  const handleExpand = () => {
+    if (expanded) setExpanded(false);
+    else {
+      trackLink(
+        state.data[0].Sessions.Mobile,
+        state.data[0].Sessions.SessionID,
+        "Feedback Expanded"
+      );
+      setExpanded(true);
+    }
+  };
+
   return (
     <div className="nudge-theme d-flex justify-content-center m-3">
       {state.loading ? (
@@ -76,8 +95,12 @@ function Report() {
           <div className="text-secondary mt-2" style={{ fontSize: "1rem" }}>
             You have completed your practice session!
           </div>
-          <div className="d-none text-nudge mt-3" style={{ fontSize: "1rem" }}>
-            Day 1 - Mock Interview
+          <div className="text-nudge mt-3" style={{ fontSize: "1.25rem" }}>
+            {`${
+              state.SystemPrompts?.Persona
+                ? state.SystemPrompts.Persona + " - "
+                : ""
+            }${state.SystemPrompts?.Name}`}
           </div>
           <div className="text-nudge mt-3" style={{ fontSize: "1.5rem" }}>
             Accuracy Score
@@ -152,7 +175,7 @@ function Report() {
                 <div
                   className="border rounded"
                   style={{
-                    maxHeight: 200,
+                    maxHeight: expanded ? 400 : 200,
                     overflowY: "scroll",
                     display: showFeedback ? "block" : "none",
                   }}
@@ -174,8 +197,11 @@ function Report() {
                     backgroundImage:
                       "linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1))",
                   }}
+                  onClick={handleExpand}
                 >
-                  <FontAwesomeIcon icon={faAngleDoubleDown} />
+                  <FontAwesomeIcon
+                    icon={expanded ? faAngleDoubleUp : faAngleDoubleDown}
+                  />
                 </div>
               </div>
             </div>
@@ -190,11 +216,11 @@ function Report() {
             </div>
           </div>
           <div className="d-flex mt-2">
-            <div className="d-flex border rounded p-2 me-2">
+            <div className="d-none d-flex border rounded p-2 me-2">
               <FontAwesomeIcon icon={faPaperPlane} style={{ fontSize: 30 }} />
             </div>
             <div
-              className="d-flex w-100 text-light bg-nudge justify-content-center border rounded"
+              className="d-flex w-100 text-light bg-nudge justify-content-center border rounded p-2"
               style={{ borderColor: "#693d30 !important" }}
             >
               <div className="d-flex align-items-center">
