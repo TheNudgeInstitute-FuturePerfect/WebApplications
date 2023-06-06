@@ -27,16 +27,18 @@ function Report() {
 
   useEffect(() => {
     getSessionData(SessionID).then((SessionData) => {
-      getSystemPrompts(SessionData.data[0].Sessions.SystemPromptsROWID).then(
-        (SystemPrompt) => {
-          setState({
-            ...SessionData,
-            stars: stars(SessionData.data),
-            wordCount: wordCount(SessionData.data),
-            ...SystemPrompt.data[0],
-          });
-        }
-      );
+      if (SessionData.data.length)
+        getSystemPrompts(SessionData.data[0].Sessions.SystemPromptsROWID).then(
+          (SystemPrompt) => {
+            setState({
+              ...SessionData,
+              stars: stars(SessionData.data),
+              wordCount: wordCount(SessionData.data),
+              ...SystemPrompt.data[0],
+            });
+          }
+        );
+      else setState({ data: [], loading: false });
     });
   }, [SessionID]);
 
@@ -87,37 +89,49 @@ function Report() {
         <div className="text-center mt-5 text-danger heading">
           {state.error}
         </div>
-      ) : (
+      ) : state.data?.length ? (
         <div className="d-flex flex-column text-center">
-          <div className="text-nudge heading" style={{ fontSize: "1.5rem" }}>
-            Congratulations
+          <div className="text-nudge heading" style={{ fontSize: "2rem" }}>
+            Congratulations 👏🏽
           </div>
-          <div className="text-secondary mt-2" style={{ fontSize: "1rem" }}>
+          <div
+            className="d-none text-secondary mt-2"
+            style={{ fontSize: "1rem" }}
+          >
             You have completed your practice session!
           </div>
           <div className="text-nudge mt-3" style={{ fontSize: "1.25rem" }}>
             {`${
               state.SystemPrompts?.Persona
                 ? state.SystemPrompts.Persona + " - "
-                : ""
+                : "Topic: "
             }${state.SystemPrompts?.Name}`}
           </div>
           <div className="text-nudge mt-3" style={{ fontSize: "1.5rem" }}>
-            Accuracy Score
+            English Level
           </div>
           <div className="mt-1" style={{ fontSize: "2rem" }}>
             <FontAwesomeIcon
-              icon={state.stars > 1 ? faStarSolid : faStarRegular}
+              icon={state.stars >= 1 ? faStarSolid : faStarRegular}
+              className="text-nudge"
+            />
+            <FontAwesomeIcon
+              icon={state.stars >= 2 ? faStarSolid : faStarRegular}
               className="text-nudge"
             />
             <FontAwesomeIcon
               icon={state.stars > 2 ? faStarSolid : faStarRegular}
               className="text-nudge"
             />
-            <FontAwesomeIcon
-              icon={state.stars > 2 ? faStarSolid : faStarRegular}
-              className="text-nudge"
-            />
+          </div>
+          <div className="text-secondary">
+            {state.stars === 3
+              ? "Excellent!"
+              : state.stars === 2
+              ? "Great job!"
+              : state.stars === 1
+              ? "Good job!"
+              : null}
           </div>
 
           <div className="w-100 text-nudge text-start mt-5" style={{}}>
@@ -164,7 +178,7 @@ function Report() {
                 className="w-auto fw-bold d-flex justify-content-between"
                 // onClick={() => setShowFeedback(showFeedback ? false : true)}
               >
-                <div>Sentence-by-sentence Feedback</div>
+                <div>Sentence Correction</div>
                 {/* <div className="d-flex">
                   <div>
                     <FontAwesomeIcon icon={faAngleDown} />
@@ -234,6 +248,8 @@ function Report() {
             </div>
           </div>
         </div>
+      ) : (
+        <div className="text-info fw-bold mt-5">Invalid Session</div>
       )}
     </div>
   );
