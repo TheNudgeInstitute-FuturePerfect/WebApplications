@@ -40,7 +40,7 @@ function Download({ showModal, hideModal, path }) {
     if (startDate && endDate) {
       axios
         .get(
-          `${process.env.REACT_APP_API_ENDPOINT}/api/${path}?startDate=${startDate}&endDate=${endDate}`
+          `${process.env.REACT_APP_API_ENDPOINT}/api/${path}?startDate=${startDate}&endDate=${endDate}&limit=none`
         )
         .then((response) => excel(response.data.data))
         .catch((error) => console.error(error))
