@@ -14,6 +14,8 @@ import Feedback from "./feedback.mjs";
 import { useEffect, useState } from "react";
 import { getSessionData, getSystemPrompts, trackLink } from "./api.mjs";
 import { useLocation } from "react-router-dom";
+import animatedDownArrow from "../../images/animated-down-arrow.gif";
+import downArrow from "../../images/down-arrow.png";
 
 function Report() {
   const [state, setState] = useState({ stars: 0, loading: true });
@@ -213,9 +215,10 @@ function Report() {
                   }}
                   onClick={handleExpand}
                 >
-                  <FontAwesomeIcon
+                  <img src={downArrow} alt="Expand" width={20} />
+                  {/* <FontAwesomeIcon
                     icon={expanded ? faAngleDoubleUp : faAngleDoubleDown}
-                  />
+                  /> */}
                 </div>
               </div>
             </div>
