@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import talkNote from "./images/talk-note.png";
 import eclass from "./images/e-class.png";
 import link from "./images/link.png";
+import zoom from "./images/zoom.png";
 
 import telegramClient from "./images/telegram-client.png";
 import glow from "../src/images/glow.png";
@@ -61,6 +62,16 @@ const Home = () => {
           className="btn btn-primary text-decoration-none w-100"
         >
           Link
+        </Link>
+      </div>
+      <div className="col-12 col-sm-3 col-md-2 shadow rounded text-center p-2 app-cont mt-3">
+        <img src={zoom} alt="Zoom" className="w-100 mt-2 mb-2" />
+        <Link
+          to="/zoom"
+          style={{ fontSize: 14 }}
+          className="btn btn-primary text-decoration-none w-100"
+        >
+          Zoom
         </Link>
       </div>
     </div>
