@@ -16,6 +16,7 @@ import Feedback from "./apps/glow/feedback.mjs";
 import Glow from "./apps/glow/index.mjs";
 import LinkTracking from "./apps/link-tracking.mjs";
 import Report from "./apps/glow/report.mjs";
+import Zoom from "./apps/zoom/index.mjs";
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
           />
           <Route path="/glow" element={<Glow />} />
           <Route path="/link-tracking" element={<LinkTracking />} />
+          <Route path="/zoom" element={<Zoom />} />
           <Route path="*" element={<PageNotFound />} />
         </Route>
         <Route path="/glow/feedback" element={<Feedback />} />

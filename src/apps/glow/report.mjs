@@ -4,8 +4,6 @@ import {
   faStar as faStarRegular,
 } from "@fortawesome/free-regular-svg-icons";
 import {
-  faAngleDoubleDown,
-  faAngleDoubleUp,
   faAngleDown,
   faStar as faStarSolid,
 } from "@fortawesome/free-solid-svg-icons";
@@ -14,7 +12,6 @@ import Feedback from "./feedback.mjs";
 import { useEffect, useState } from "react";
 import { getSessionData, getSystemPrompts, trackLink } from "./api.mjs";
 import { useLocation } from "react-router-dom";
-import animatedDownArrow from "../../images/animated-down-arrow.gif";
 import downArrow from "../../images/down-arrow.png";
 
 function Report() {
