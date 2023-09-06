@@ -134,7 +134,7 @@ function Meeting() {
       " " +
       split_and_join.slice(3, 6) +
       " " +
-      split_and_join.slice(6, 10)
+      split_and_join.slice(6, 11)
     );
   };
 
