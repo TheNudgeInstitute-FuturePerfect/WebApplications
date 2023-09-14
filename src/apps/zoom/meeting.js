@@ -226,7 +226,7 @@ function Meeting() {
             Join
           </div>
           <div
-            className="btn btn-secondary"
+            className="btn btn-secondary d-none"
             onClick={() =>
               clickable ? handleMeeting("leave") : console.log("please wait...")
             }
