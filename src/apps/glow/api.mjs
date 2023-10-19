@@ -26,7 +26,7 @@ const getSystemPrompts = async (ROWID) => {
   if (ROWID) {
     try {
       const response = await axios.get(
-        `${process.env.REACT_APP_API_ENDPOINT}/api/glow/feedback?collection=systemprompts&ROWID='${ROWID}'`
+        `${process.env.REACT_APP_API_ENDPOINT}/api/glow/feedback?collection=systemprompts&ROWID=${ROWID}`
       );
       if (response.data.data instanceof Array && response.data.data.length)
         return { ...response.data, loading: false };
