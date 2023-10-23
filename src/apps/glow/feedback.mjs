@@ -46,14 +46,14 @@ function Feedback({ params }) {
               <div className="border p-2 system-container text-light rounded mb-3 align-self-end ms-5">
                 <div
                   className={
-                    session.Sessions.Classification?.toLowerCase() ===
+                    session.Classification?.toLowerCase() ===
                     "could be improved"
                       ? "mb-1 text-warning"
                       : "mb-1 classification-color"
                   }
                 >
                   <span className="me-3">
-                    {session.Sessions.Classification?.toLowerCase() ===
+                    {session.Classification?.toLowerCase() ===
                     "could be improved" ? (
                       <>
                         <FontAwesomeIcon icon={faCheck} className="me-1" />
@@ -72,7 +72,7 @@ function Feedback({ params }) {
                   <span className="float-end">
                     <FontAwesomeIcon
                       icon={
-                        session.Sessions.UserFeedback?.toLowerCase() === "good"
+                        session.UserFeedback?.toLowerCase() === "good"
                           ? faThumbsUpSolid
                           : faThumbsUpRegular
                       }
@@ -86,7 +86,7 @@ function Feedback({ params }) {
                     />
                     <FontAwesomeIcon
                       icon={
-                        session.Sessions.UserFeedback?.toLowerCase() === "bad"
+                        session.UserFeedback?.toLowerCase() === "bad"
                           ? faThumbsDownSolid
                           : faThumbsDownRegular
                       }
@@ -100,17 +100,15 @@ function Feedback({ params }) {
                     />
                   </span>
                 </div>
-                <div className="">
-                  {decodeURIComponent(session.Sessions.Message)}
-                </div>
-                {session.Sessions.Classification?.toLowerCase() ===
+                <div className="">{decodeURIComponent(session.Message)}</div>
+                {session.Classification?.toLowerCase() ===
                 "could be improved" ? (
                   <>
                     <div className="border-top mt-3 pt-2 small tutor-feedback">
                       <FontAwesomeIcon icon={faBookOpen} className="me-1" />
                       Miss Ramya Feedback
                     </div>
-                    <div>{session.Sessions.Improvement}</div>
+                    <div>{session.Improvement}</div>
                   </>
                 ) : (
                   <></>
@@ -118,7 +116,7 @@ function Feedback({ params }) {
               </div>
 
               <div className="border p-2 rounded user-container text-light mb-3 align-self-start me-5">
-                {decodeURIComponent(session.Sessions.Reply)}
+                {decodeURIComponent(session.Reply)}
               </div>
             </Fragment>
           ))}
