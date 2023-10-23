@@ -4,12 +4,12 @@ const getSessionData = async (SessionID) => {
   if (SessionID) {
     try {
       const response = await axios.get(
-        `${process.env.REACT_APP_API_ENDPOINT}/api/glow/feedback?action=list&table=Sessions&condition=SessionID='${SessionID}' AND MessageType='UserMessage' ORDER BY CREATEDTIME`
+        `${process.env.REACT_APP_API_ENDPOINT}/api/glow/feedback?collection=sessions&SessionID=${SessionID}`
       );
       if (response.data.data instanceof Array && response.data.data.length)
         trackLink(
-          response.data.data[0].Sessions.Mobile,
-          response.data.data[0].Sessions.SessionID,
+          response.data.data[0].Mobile,
+          response.data.data[0].SessionID,
           "Page Opened"
         );
       return { ...response.data, loading: false };
@@ -26,7 +26,7 @@ const getSystemPrompts = async (ROWID) => {
   if (ROWID) {
     try {
       const response = await axios.get(
-        `${process.env.REACT_APP_API_ENDPOINT}/api/glow/feedback?action=list&table=SystemPrompts&condition=ROWID='${ROWID}'`
+        `${process.env.REACT_APP_API_ENDPOINT}/api/glow/feedback?collection=systemprompts&ROWID=${ROWID}`
       );
       if (response.data.data instanceof Array && response.data.data.length)
         return { ...response.data, loading: false };
@@ -61,17 +61,17 @@ const userFeedback = (data, value, index) => {
   if (data instanceof Array) {
     const _data = data.map((element, _index) => {
       if (index === _index) {
-        return { Sessions: { ...element.Sessions, UserFeedback: value } };
+        return { ...element, UserFeedback: value };
       }
       return element;
     });
     // update database
     const requestBody = {
-      table: "Sessions",
+      collection: "sessions",
       set: {
         UserFeedback: value,
       },
-      condition: `ROWID=${data[index].Sessions.ROWID}`,
+      ROWID: `${data[index].ROWID}`,
     };
 
     const options = {
@@ -82,10 +82,7 @@ const userFeedback = (data, value, index) => {
       body: JSON.stringify(requestBody),
     };
 
-    fetch(
-      `${process.env.REACT_APP_API_ENDPOINT}/api/glow/feedback?action=update`,
-      options
-    )
+    fetch(`${process.env.REACT_APP_API_ENDPOINT}/api/glow/feedback`, options)
       .then((response) => {
         response.json().then((jsonResponse) => {
           // console.log(jsonResponse);

@@ -27,7 +27,7 @@ function Report() {
   useEffect(() => {
     getSessionData(SessionID).then((SessionData) => {
       if (SessionData.data.length)
-        getSystemPrompts(SessionData.data[0].Sessions.SystemPromptsROWID).then(
+        getSystemPrompts(SessionData.data[0].SystemPromptsROWID).then(
           (SystemPrompt) => {
             setState({
               ...SessionData,
@@ -45,8 +45,7 @@ function Report() {
     return data.reduce(
       (accumulator, currentValue) =>
         accumulator +
-          decodeURIComponent(currentValue.Sessions.Message)?.split(" ")
-            ?.length || 0,
+          decodeURIComponent(currentValue.Message)?.split(" ")?.length || 0,
       0
     );
   };
@@ -55,8 +54,7 @@ function Report() {
     const perfectLines = data.reduce(
       (accumulator, currentValue) =>
         accumulator +
-        (currentValue.Sessions.Classification?.toLowerCase() ===
-        "could be improved"
+        (currentValue.Classification?.toLowerCase() === "could be improved"
           ? 0
           : 1),
 
@@ -72,8 +70,8 @@ function Report() {
     if (expanded) setExpanded(false);
     else {
       trackLink(
-        state.data[0].Sessions.Mobile,
-        state.data[0].Sessions.SessionID,
+        state.data[0].Mobile,
+        state.data[0].SessionID,
         "Feedback Expanded"
       );
       setExpanded(true);
