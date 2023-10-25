@@ -71,7 +71,7 @@ const userFeedback = (data, value, index) => {
       set: {
         UserFeedback: value,
       },
-      ROWID: `${data[index].ROWID}`,
+      ROWID: `${data[index]._id}`,
     };
 
     const options = {
