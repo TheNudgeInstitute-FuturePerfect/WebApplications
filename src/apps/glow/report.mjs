@@ -98,11 +98,9 @@ function Report() {
             You have completed your practice session!
           </div>
           <div className="text-nudge mt-3" style={{ fontSize: "1.25rem" }}>
-            {`${
-              state.SystemPrompts?.Persona
-                ? state.SystemPrompts.Persona + " - "
-                : "Topic: "
-            }${state.SystemPrompts?.Name}`}
+            {`${state?.Persona ? state.Persona + " - " : "Topic: "}${
+              state?.Name
+            }`}
           </div>
           <div className="text-nudge mt-3" style={{ fontSize: "1.5rem" }}>
             English Level
